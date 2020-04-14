@@ -97,13 +97,12 @@
         var growthThreshold
         var pieces
 
-        var canvas
+        var canvas = document.getElementById('game-canvas')
+        canvas.addEventListener("click", putPiece, false);
 
         var toPlay = black;
 
         function newGame() {
-            canvas = document.getElementById('game-canvas');
-            canvas.addEventListener("click", putPiece, false);
             boardSize = parseInt(document.getElementById('board-size').value)
             killThreshold = parseInt(document.getElementById('kill-threshold').value)
             growthThreshold = parseInt(document.getElementById('growth-threshold').value)
@@ -118,7 +117,6 @@
                 }
             }
 
-            //canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
             draw()
         }
 
