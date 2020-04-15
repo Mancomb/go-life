@@ -26,8 +26,6 @@
 <body onload="newGame()">
 
     <h2>go life</h2>
-    <p>by Gunnar Kl&auml;mke</p>
-    <br>
     <p style="width:70%">
         This game is a mixture between go and Conway's game of life.
         Two players put black and white pieces on the board, trying to conquer as much space as possible.
@@ -35,9 +33,10 @@
         The game ends when the board is completely covered with pieces. The player with the most pieces on
         the board wins.
         Enjoy!!
+        <br>
+        <br>
     </p>
-    <br>
-    <br>
+
     <table style="width:70%">
         <tr>
             <td>
@@ -95,6 +94,8 @@
         var killThreshold
         var growthThreshold
         var pieces
+        var lastBoardState = ""
+        var repetitionCount = 0
 
         var canvas = document.getElementById('game-canvas')
         canvas.addEventListener("click", putPieceOrNextTurn, false);
@@ -107,6 +108,8 @@
             growthThreshold = parseInt(document.getElementById('growth-threshold').value)
             cellSize = canvas.width / (boardSize + 1)
             console.log(canvas.width, boardSize, killThreshold, growthThreshold, cellSize)
+            repetitionCount = 0
+            lastBoardState = ""
             toPlay = black
             pieces = new Array(boardSize);
             for (var i = 0; i < boardSize; i++) {
@@ -130,7 +133,7 @@
                 if (blackCount > whiteCount) winMessage = `Black wins ${blackCount} to ${whiteCount}`
                 if (whiteCount > blackCount) winMessage = `White wins ${whiteCount} to ${blackCount}`
                 if (whiteCount == blackCount) winMessage = `Draw ${whiteCount} to ${blackCount}`
-                document.getElementById('to-play').innerHTML = `Game finished. ${winMessage}.`
+                document.getElementById('to-play').innerHTML = `Game finished ${repetitionCount > 0 ? "by repetition" : ""}. ${winMessage}.`
             } else {
                 document.getElementById('to-play').innerHTML = toPlay + " to play. Click on board to make a move.";
             }
@@ -180,7 +183,7 @@
 
         function isGameOver() {
             var [b, w] = countTotalPieces()
-            return (b + w == boardSize * boardSize)
+            return (b + w == boardSize * boardSize) || (repetitionCount > 2)
         }
 
         function countAdjacentPieces(i, j) {
@@ -197,6 +200,7 @@
         }
 
         function lifeAction() {
+
             var newPieces = new Array(boardSize);
             for (var i = 0; i < boardSize; i++) {
                 newPieces[i] = new Array(boardSize);
@@ -217,7 +221,9 @@
                 }
             }
             pieces = newPieces
-
+            if (lastBoardState == JSON.stringify(pieces)) repetitionCount++
+            else repetitionCount = 0
+            lastBoardState = JSON.stringify(pieces)
         }
 
         function nextTurn() {

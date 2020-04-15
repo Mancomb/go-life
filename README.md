@@ -21,6 +21,7 @@ This is go-life. It is a board game and a mixture between go and Conway's game o
   - If the field is empty and the difference is smaller or equal to the negative growth threshold, the field gets a white piece.
   - If the field is white and the difference is larger or equal to the kill threshold, the white piece is removed (killed).
   - If the field is black and the difference is smaller or equal to the negative kill threshold, the black piece is removed (killed).
+  - Else, the field remains unchanged.
   
   
 *Gunnar Klämke, April 2020*
